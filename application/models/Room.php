@@ -16,7 +16,7 @@ class Room extends Model
 
     public function create_room($name,$password){
         $level = $this->get_max_level();
-        $query = "CALL sp_create_room($level,$name,$password);";
+        $query = "CALL sp_create_room($level,'$name','$password');";
         MySQL::Query($query,false);
     }
 
