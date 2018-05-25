@@ -18,4 +18,3 @@
         <label for="password-repeat">Re-type Password</label>
         <input type="password" class="form-control" name="password-repeat" placeholder="Password">
     </div>
-</form>

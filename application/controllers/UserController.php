@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function register(){
         if($_POST['password'] == $_POST['password-repeat']){
-            Auth::daftar($_POST['username'],$_POST['email'],$_POST['password']);
+            Auth::register($_POST['username'],$_POST['email'],$_POST['password']);
         }
         return back();
     }

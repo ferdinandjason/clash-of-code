@@ -49,7 +49,7 @@ class Auth
         return $result;
     }
 
-    function register($username,$email,$password){
+    public static function register($username,$email,$password){
         $query = "CALL sp_daftar('$username','$email','$password')";
         $result = MySQL::Query($query,true);
         if($result[0] == 1){ // success

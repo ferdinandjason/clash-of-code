@@ -25,10 +25,12 @@ class MySQL
         }
     }
 
-    public static function Query($query,$output = false){
+    public static function Query($query,$output = false,$verbose = false){
         MySQL::Connect();
+        var_dump($query);
         $result = self::$DB->query($query);
         if($output){
+            if($verbose) self::$DB->error;
             $temp = $result->fetch_all(MYSQLI_BOTH);
             return $temp;
         }
@@ -42,6 +44,7 @@ class MySQL
                 /* Store first result set */
                 if($result = self::$DB->store_result()){
                     array_push($table,$result->fetch_all(MYSQLI_BOTH));
+                    $result->close();
                     var_dump($table);
                 }
             } while (self::$DB->more_results() && self::$DB->next_result());
