@@ -21,9 +21,9 @@ class Room extends Model
         MySQL::Query($query,false);
     }
 
-    public function insert_to_room($room,$user_id){
-        $query = "CALL sp_insert_into_room($room,$user_id);";
-        MySQL::Query($query,false);
+    public function insert_to_room($room,$user_id,$password){
+        $query = "CALL sp_insert_into_room($room,$user_id,'$password');";
+        return MySQL::Query($query,true)[0][0];
     }
 
     public function get_all_room(){
@@ -32,7 +32,7 @@ class Room extends Model
     }
 
     public function get_room($user){
-        $query = "SELECT * FROM room WHERE user_id = $user;";
+        $query = "SELECT room.user_id as user_id, room.room_id as room_id, room_detail.name as name FROM room INNER JOIN room_detail ON room.room_id = room_detail.room_id where room.user_id = $user ;";
         return MySQL::Query($query,true);
     }
 

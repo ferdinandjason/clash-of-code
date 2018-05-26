@@ -29,7 +29,6 @@ class MySQL
     public static function Query($query,$output = false,$verbose = false){
         MySQL::Connect();
         $result = self::$DB->query($query);
-        echo $query.'<br>';
         if($output){
             if($verbose) echo self::$DB->error;
             $temp = $result->fetch_all(MYSQLI_BOTH);

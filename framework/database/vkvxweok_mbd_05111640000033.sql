@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: May 25, 2018 at 07:07 PM
--- Server version: 5.7.21-0ubuntu0.16.04.1
--- PHP Version: 7.2.2-3+ubuntu16.04.1+deb.sury.org+1
+-- Host: 127.0.0.1
+-- Generation Time: May 26, 2018 at 02:57 PM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 7.1.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -43,10 +43,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_change_password` (`p_username` V
 	end if;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_room` (IN `p_level` INT, IN `p_name` VARCHAR(100), IN `p_password` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_room` (IN `p_level` INT, IN `p_name` VARCHAR(100), IN `p_password` VARCHAR(100), IN `p_user` INT)  NO SQL
 BEGIN
-	SET @id = (SELECT MAX(room_id)+1 FROM room_detail GROUP BY room_id ORDER BY room_id DESC LIMIT 1);
-    INSERT INTO room VALUES (@id,p_level,p_name,MD5(p_password),1);
+	SET @id = (SELECT MAX(room_id)+1 FROM room_detail ORDER BY room_id DESC LIMIT 1);
+    INSERT INTO room_detail VALUES (@id,p_level,p_name,MD5(p_password),1);
+    INSERT INTO room VALUES
+(@id,p_user,NOW(),NULL,NULL);
     SELECT 1,"BERHASIL";
 END$$
 
@@ -60,9 +62,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_daftar` (IN `p_username` VARCHAR
 	end if;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_into_room` (IN `p_room_id` INT, IN `p_user_id` INT)  BEGIN
-	if not exists(select 1 from room where room_id = p_room_id and user_id = p_user_id) then
-		insert into room values(p_room_id, p_user_id, null, null,0);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_into_room` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_password` VARCHAR(100))  BEGIN
+	if exists(select 1 from room_detail where room_id = p_room_id and `password` = md5(p_password)) then
+		insert into room values(p_room_id, p_user_id, now(), null,0);
 		select 1, 'Berhasil!';
 	else
 		select 0, 'Gagal!';
@@ -88,7 +90,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `fn_is_joined_room` (`p_room_id` INT, `p_user_id` INT) RETURNS INT(11) READS SQL DATA
 BEGIN
-	IF EXISTS (SELECT 1 FROM room WHERE room_id = p_room_id AND user_id = p_user_id) THEN
+	IF EXISTS (SELECT * FROM room WHERE room_id = p_room_id AND user_id = p_user_id) THEN
     	RETURN 1;
     ELSE
     	RETURN 0;
@@ -195,7 +197,9 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`room_id`, `user_id`, `start_time`, `end_time`, `score`) VALUES
-(0, 1, '2018-05-13 08:20:14', '2018-05-13 08:20:14', 0);
+(1, 2, '2018-05-26 12:33:02', '2018-05-26 12:33:02', 0),
+(1, 3, '2018-05-26 11:25:34', '2018-05-26 11:25:34', NULL),
+(2, 2, '2018-05-26 12:13:15', '2018-05-26 12:13:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -216,7 +220,10 @@ CREATE TABLE `room_detail` (
 --
 
 INSERT INTO `room_detail` (`room_id`, `level_id`, `name`, `password`, `avaiable`) VALUES
-(0, 0, '0', '', 0);
+(0, 1, '', '', 0),
+(1, 2, 'ha', 'c4ca4238a0b923820dcc509a6f75849b', 1),
+(2, 3, 'hai', 'c4ca4238a0b923820dcc509a6f75849b', 1),
+(3, 2, 'hehe', 'c4ca4238a0b923820dcc509a6f75849b', 1);
 
 -- --------------------------------------------------------
 
@@ -274,9 +281,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `level_level`, `username`, `email`, `password`, `user_level`, `exp`) VALUES
-(0, 0, '0', '0', '0', 0, 0),
-(1, 0, 'asd', 'asd@asd.com', '7815696ecbf1c96e6894b779456d330e', 0, 0),
-(2, 0, 'asdasd', 'asdasd@asd.com', 'a8f5f167f44f4964e6c998dee827110c', 0, 0);
+(1, 0, NULL, NULL, NULL, NULL, NULL),
+(2, 0, 'titut', 'titut@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
+(3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0);
 
 --
 -- Indexes for dumped tables

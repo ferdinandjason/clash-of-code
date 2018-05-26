@@ -18,12 +18,10 @@ class RoomController extends Controller
 
     public function create(){
         $this->model->create_room($_POST['name'],$_POST['password']);
-        // $this->model->get_room($_SESSION['user_id']);
-        var_dump($_SESSION['user_id']);
     }
 
     public function join(){
-        $this->model->insert_to_room($_POST['room'],$_SESSION['user_id']);
+        $status = $this->model->insert_to_room($_POST['roomjoin'],$_SESSION['user_id'],$_POST['password']);
     }
 
 }

@@ -1,3 +1,6 @@
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
+
 <?php
     $var = $this->data;
     foreach ($var as $name => $value) {
@@ -49,23 +52,31 @@
 				<div class="card wallet" style="top: 50px;">
      				<div class="overlay"></div>
   					<div class="circle"></div>
-  					<p> AVAIABLE ROOM </p>
-	<ul>
-		<?php foreach ($rooms as $room) : ?>
-			<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
-				<li>
-					Nama : <?php echo $room['name']."<br>" ?>
-					Level : <?php echo $room['level_id']."<br>" ?>
-					<form action="/room/join" method="POST">
-						<input type="hidden" name="room" value="<?php echo $room['room_id'] ?>">
-						<button type="submit">Join ROOM</button>
-					</form>
-				</li>
-			<?php endif; ?>
-		<?php endforeach; ?>
-	</ul>
+  					<div class="col">
+  						<?php if(Auth::user()): ?> 
+	  						<?php foreach ($rooms as $room) : ?>
+								<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
+									<div class="col-md-2" style="float: left;">
+										<div class="roomimg" style="margin-top: 5px; position: relative;">
+											<img src="public/images/room1.png" style="max-width: 100%;" alt>
+											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
+												<?php echo $room['name']."<br>"?>
+												Lv <?php echo $room['level_id'] ?>
+											</div>
+											
+											<button type="button" class="joinroombutton" data-id="<?php echo $room['room_id'] ?>" data-toggle="modal" data-target="#joinroom" style="border: 0; background: transparent;">
+												<img src="public/images/room2.png" style="max-width: 100%; margin-top: -2px;" alt="join room">
+											</button>
+											
+										</div>						
+									</div>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php endif; ?>
+  					</div>
+  						
  				</div>
-
+ 				
 			</div>
 		</div>
 		<div class="row">
@@ -73,6 +84,20 @@
 				<a href="#" class="card wallet">
      				<div class="overlay"></div>
   					<div class="circle"></div>
+  					<div class="col">
+  						<?php if(Auth::user()): ?> 
+	  						<?php foreach ($my_rooms as $room) : ?>
+									<div class="col-md-2" style="float: left;">
+										<div class="roomimg" style="margin-top: 5px; position: relative;">
+											<img src="public/images/room1.png" style="max-width: 100%;" alt>
+											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
+												<?php echo $room['name']."<br>"?>
+											</div>
+										</div>						
+									</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+  					</div>
 				</a>
 			</div>
 		</div>
@@ -130,7 +155,29 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="createroom" tabindex="-1" role="dialog" aria-labelledby="createroomlabel" aria-hidden="true">
+	<div class="modal fade" id="joinroom" tabindex="-1" role="dialog" aria-labelledby="joinroomlabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm" role="document">
+		    <div class="modal-content">
+		        <form id="joinroomform" action="room/join" method="POST">
+		            <div class="modal-header" style="flex-direction: row;">
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		            	<input type="hidden" name="roomjoin" value="" id="roomjoin">
+						<input type="password" placeholder="Password" name="password">
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		                <button class="btn btn-primary" type="submit" name="submit">Create Room</button>
+		            </div>
+		        </form>
+		    </div>
+		</div>
+    </div>
+
+    <div class="modal fade" id="createroom" tabindex="-1" role="dialog" aria-labelledby="createroomlabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm" role="document">
 		    <div class="modal-content">
 		        <form id="createroomform" action="room/create" method="POST">
@@ -158,6 +205,14 @@
 		    </div>
 		</div>
     </div>
-
 </body>
 </html>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(document).on("click", ".joinroombutton", function () {
+		     var roomid = $(this).data('id');
+		     $(".modal-body #roomjoin").val(roomid);
+		});
+	});
+</script>
