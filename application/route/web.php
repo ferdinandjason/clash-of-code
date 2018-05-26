@@ -17,6 +17,9 @@ Router::route('/room/create',function(){
 Router::route('/room/join',function(){
     Router::handle('RoomController@join');
 });
+Router::route('/room/play/(.+)+',function($id){
+    Router::handle('RoomController@play',array($id));
+});
 
 Router::route('/login',function(){
     Router::handle('UserController@login');

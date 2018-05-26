@@ -40,4 +40,9 @@ class Room extends Model
         $query = "SELECT fn_is_joined_room($room_id,$user_id);";
         return MySQL::Query($query,true)[0][0];
     }
+
+    public function get_game($id){
+        $query = "SELECT * from room_detail WHERE room_id = $id";
+        return MySQL::Query($query,true)[0];
+    }
 }

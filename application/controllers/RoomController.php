@@ -24,4 +24,9 @@ class RoomController extends Controller
         $status = $this->model->insert_to_room($_POST['roomjoin'],$_SESSION['user_id'],$_POST['password']);
     }
 
+    public function play($id){
+        $room = $this->model->get_game($id);
+        return View::make('game',compact('room'));
+    }
+
 }
