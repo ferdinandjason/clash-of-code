@@ -103,7 +103,6 @@
 		</div>
 	</div>
 
-
 	<div <?php if(!Auth::user()): ?> hidden <?php endif; ?> class="createroom" style="position: fixed;">
 		<button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#createroom">
         	Create New Room

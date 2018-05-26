@@ -25,4 +25,5 @@ Router::route('/register',function(){
     Router::handle('UserController@register');
 });
 
+echo $_SERVER['REQUEST_URI'];
 Router::execute(substr($_SERVER['REQUEST_URI'],4));
