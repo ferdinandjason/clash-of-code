@@ -18,6 +18,7 @@ class RoomController extends Controller
 
     public function create(){
         $this->model->create_room($_POST['name'],$_POST['password']);
+        return back();
     }
 
     public function join(){

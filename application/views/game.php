@@ -4,6 +4,9 @@
         ${$name}=$value;
     }
     // var_dump($var["room"]["level_id"]);
+    $game = new GameController();
+    $map = $game->get_map($room['room_id']);
+    $star = $game->get_star($room['room_id']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,35 +72,12 @@
 	</table>
 	<script type="text/javascript">
 		let games;
-		let map = undefined;
-		let star = undefined;
+		let map = JSON.parse('<?php echo $map; ?>').data;
+		let star = JSON.parse('<?php echo $star; ?>').data;
 		let step = 0;
 
-		function getMap(id){
-			$.ajax({
-				url:'/coc/game/map/'+id,
-				type:'POST',
-				success:function(data){
-					map = JSON.parse(data).data;
-				}
-			})
-		}
-
-		function getStar(id){
-			$.ajax({
-				url:'/coc/game/star/'+id,
-				type:'POST',
-				success:function(data){
-					star = JSON.parse(data).data;
-				}
-			});
-		}
-
-		getMap(<?php echo $room['level_id']; ?>);
-		getStar(<?php echo $room['level_id']; ?>);
-
 		window.onload = function(){
-			while(map == undefined || star == undefined){
+			if(map == undefined || star == undefined){
 				setTimeout(window.onload,1000);
 			}
 
