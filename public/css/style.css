@@ -37,6 +37,10 @@ html, body{
 	position: fixed;
 }
 
+.roomname{
+  
+}
+
 /*----------------- available board --------------------*/
 
 .wallet {
@@ -139,3 +143,4 @@ html, body{
 	right: 50px;
 	top: 60px;
 }
+
