@@ -112,7 +112,7 @@
 	</ul>
 
 
-	<form action="/room/create" method="POST">
+	<form action="room/create" method="POST">
 		<label for="name"><b>Room Name</b></label>
 		<input type="text" placeholder="Enter Username" name="name" required>
 		<label for="password"><b>Password</b></label>

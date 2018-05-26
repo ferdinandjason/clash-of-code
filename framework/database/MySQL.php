@@ -27,10 +27,10 @@ class MySQL
 
     public static function Query($query,$output = false,$verbose = false){
         MySQL::Connect();
-        var_dump($query);
         $result = self::$DB->query($query);
+        echo $query.'<br>';
         if($output){
-            if($verbose) self::$DB->error;
+            if($verbose) echo self::$DB->error;
             $temp = $result->fetch_all(MYSQLI_BOTH);
             return $temp;
         }
@@ -45,7 +45,6 @@ class MySQL
                 if($result = self::$DB->store_result()){
                     array_push($table,$result->fetch_all(MYSQLI_BOTH));
                     $result->close();
-                    var_dump($table);
                 }
             } while (self::$DB->more_results() && self::$DB->next_result());
         }
