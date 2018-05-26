@@ -20,37 +20,39 @@
 	<title>MBD</title>
 </head>
 <body style="position: relative;">
-    <canvas id="game"></canvas>
-	<table>
-		<tbody>
-			<tr id="F1">
-				<th>F1</th>
-				<td class="click box option" id="o1">_</td>
-				<td class="click box option" id="o2">_</td>
-				<td class="click box option" id="o3">_</td>
-				<td class="click box option" id="o4">_</td>
-				<td class="click box option" id="o5">_</td>
-				<td class="click box option" id="o6">_</td>
-				<td class="click box option" id="o7">_</td>
-				<td class="click box option" id="o8">_</td>
-				<td class="click box option" id="o9">_</td>
-				<td class="click box option" id="o10">_</td>
-			</tr>
-			<tr id="F2" style="margin-top: 30px !important;">
-				<th>F2</th>
-				<td class="click box option" id="o11">_</td>
-				<td class="click box option" id="o12">_</td>
-				<td class="click box option" id="o13">_</td>
-				<td class="click box option" id="o14">_</td>
-				<td class="click box option" id="o15">_</td>
-				<td class="click box option" id="o16">_</td>
-				<td class="click box option" id="o17">_</td>
-				<td class="click box option" id="o18">_</td>
-				<td class="click box option" id="o19">_</td>
-				<td class="click box option" id="o20">_</td>
-			</tr>
-		</tbody>
-	</table>
+    <canvas id="game" style="float: left; margin-right: 30px; max-height: 100%;"></canvas>
+	<div style="padding-top: 200px;">
+		<table>
+			<tbody>
+				<tr id="F1">
+					<th>F1</th>
+					<td class="click box option" id="o1">_</td>
+					<td class="click box option" id="o2">_</td>
+					<td class="click box option" id="o3">_</td>
+					<td class="click box option" id="o4">_</td>
+					<td class="click box option" id="o5">_</td>
+					<td class="click box option" id="o6">_</td>
+					<td class="click box option" id="o7">_</td>
+					<td class="click box option" id="o8">_</td>
+					<td class="click box option" id="o9">_</td>
+					<td class="click box option" id="o10">_</td>
+				</tr>
+				<tr id="F2" style="margin-top: 30px !important;">
+					<th>F2</th>
+					<td class="click box option" id="o11">_</td>
+					<td class="click box option" id="o12">_</td>
+					<td class="click box option" id="o13">_</td>
+					<td class="click box option" id="o14">_</td>
+					<td class="click box option" id="o15">_</td>
+					<td class="click box option" id="o16">_</td>
+					<td class="click box option" id="o17">_</td>
+					<td class="click box option" id="o18">_</td>
+					<td class="click box option" id="o19">_</td>
+					<td class="click box option" id="o20">_</td>
+				</tr>
+			</tbody>
+		</table>
+	<div>
 	<button id="play">PLAY</button>
 	<table style="border: solid thin;position: absolute;" id="option">
 		<tbody>
