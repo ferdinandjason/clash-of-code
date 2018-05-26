@@ -16,10 +16,9 @@ class Room extends Model
 
     public function create_room($name,$password){
         $level = $this->get_max_level();
-        echo $level;
-        $query = "CALL sp_create_room($level,'$name','$password');";
-        $result = MySQL::Query($query,true,true);
-        var_dump($result);
+        $user_id = $_SESSION['user_id'];
+        $query = "CALL sp_create_room($level,'$name','$password','$user_id');";
+        MySQL::Query($query,false);
     }
 
     public function insert_to_room($room,$user_id){
@@ -39,6 +38,6 @@ class Room extends Model
 
     public static function is_joined_room($user_id,$room_id){
         $query = "SELECT fn_is_joined_room($room_id,$user_id);";
-        return MySQL::Query($query,true)[0];
+        return MySQL::Query($query,true)[0][0];
     }
 }

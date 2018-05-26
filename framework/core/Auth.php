@@ -13,14 +13,11 @@ class Auth
         $query.= "CALL sp_login('$email','$password');";
         $query.= "SELECT * FROM `user` WHERE email='".$email."';";
 
-        echo $query;
-
         $result = MySQL::MultiQuery($query);
         /*
          * If Login Success
          */
         if($result[0][0][0] == 1){
-            var_dump($result[1]);
             Auth::set_session($result[1][0]);
             return true;
         }
