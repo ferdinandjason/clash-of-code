@@ -10,6 +10,7 @@
  * framework/database/MySQL.php
  * Database operation class
  */
+
 class MySQL
 {
     private static $DB;
