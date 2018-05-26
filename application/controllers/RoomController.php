@@ -22,8 +22,6 @@ class RoomController extends Controller
 
     public function join(){
         $status = $this->model->insert_to_room($_POST['roomjoin'],$_SESSION['user_id'],$_POST['password']);
-        if ($status == 1)
-            var_dump('hai');
     }
 
 }
