@@ -89,8 +89,8 @@
 			for(var id=1;id<=20;id++){
 				$('#o'+id).click(function(){
 					var pos = $(this).position();
-					var lleft = pos.left;
-					var ttop = pos.top - $('#option').height() + 640;
+					var lleft = pos.left + 550;
+					var ttop = pos.top - $('#option').height() + 190;
 					$('#option').css({left:lleft,top:ttop});
 					$('#option').show();
 					var caller = $(this).attr('id');
