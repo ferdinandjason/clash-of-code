@@ -170,7 +170,7 @@
 		            </div>
 		            <div class="modal-footer">
 		                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		                <button class="btn btn-primary" type="submit" name="submit">Create Room</button>
+		                <button class="btn btn-primary" type="submit" name="submit">Join Room</button>
 		            </div>
 		        </form>
 		    </div>

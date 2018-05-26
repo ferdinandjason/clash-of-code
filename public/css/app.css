@@ -1,0 +1,10 @@
+.box{
+	height: 30px;
+	width: 30px;
+	border: solid thin;
+	text-align: center;
+}
+
+.click{
+	cursor: pointer;
+}

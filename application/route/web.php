@@ -14,6 +14,7 @@ Router::route('/',function(){
 Router::route('/room/create',function(){
     Router::handle('RoomController@create');
 });
+
 Router::route('/room/join',function(){
     Router::handle('RoomController@join');
 });
@@ -24,6 +25,7 @@ Router::route('/room/play/(.+)+',function($id){
 Router::route('/login',function(){
     Router::handle('UserController@login');
 });
+
 Router::route('/register',function(){
     Router::handle('UserController@register');
 });

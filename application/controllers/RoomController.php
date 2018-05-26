@@ -22,6 +22,14 @@ class RoomController extends Controller
 
     public function join(){
         $status = $this->model->insert_to_room($_POST['roomjoin'],$_SESSION['user_id'],$_POST['password']);
+        if($status == 1){
+            header('Location: ../room/play/'.$_POST['roomjoin']);
+            die();
+        }
+        else{
+            header('Location: ../');
+            die();
+        }
     }
 
     public function play($id){
