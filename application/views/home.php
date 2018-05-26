@@ -46,33 +46,10 @@
 	<div <?php if(!Auth::user()): ?> hidden <?php endif; ?> class="container rooms">
 		<div class="row">
 			<div class="col-12 availableroom">
-
 				<div class="card wallet" style="top: 50px;">
      				<div class="overlay"></div>
   					<div class="circle"></div>
-				</div>
-
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-8 joinedroom" style="margin-top: 70px;">
-				<a href="#" class="card wallet">
-     				<div class="overlay"></div>
-  					<div class="circle"></div>
-				</a>
-			</div>
-		</div>
-	</div>
-
-
-	<div class="createroom" style="position: fixed;">
-		<button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#createroom">
-        	Create New Room
-        </button>
-	</div>
-
-
-	<!-- <p> AVAIABLE ROOM </p>
+  					<p> AVAIABLE ROOM </p>
 	<ul>
 		<?php foreach ($rooms as $room) : ?>
 			<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
@@ -87,19 +64,26 @@
 			<?php endif; ?>
 		<?php endforeach; ?>
 	</ul>
+ 				</div>
 
-	<p> JOINED ROOM </p>
-	<ul>
-		<?php foreach ($my_rooms as $room) : ?>
-			<li>
-				ID Room : <?php echo $room['room_id']."<br>" ?>
-			</li>
-		<?php endforeach; ?>
-	</ul> -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-8 joinedroom" style="margin-top: 70px;">
+				<a href="#" class="card wallet">
+     				<div class="overlay"></div>
+  					<div class="circle"></div>
+				</a>
+			</div>
+		</div>
+	</div>
 
 
-	
-
+	<div <?php if(!Auth::user()): ?> hidden <?php endif; ?> class="createroom" style="position: fixed;">
+		<button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#createroom">
+        	Create New Room
+        </button>
+	</div>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
