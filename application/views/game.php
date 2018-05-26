@@ -5,8 +5,8 @@
     }
     // var_dump($var["room"]["level_id"]);
     $game = new GameController();
-    $map = $game->get_map($room['room_id']);
-    $star = $game->get_star($room['room_id']);
+    $map = $game->get_map($room['level_id']);
+    $star = $game->get_star($room['level_id']);
 ?>
 <!DOCTYPE html>
 <html>
