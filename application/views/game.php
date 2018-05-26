@@ -16,6 +16,8 @@
 	
 	<script type="text/javascript" src="../../public/js/app.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     
 	<title>MBD</title>
 </head>
@@ -65,8 +67,39 @@
 	</table>
 	<script type="text/javascript">
 		let games;
+		let map = undefined;
+		let star = undefined;
+		let step = 0;
+
+		function getMap(id){
+			$.ajax({
+				url:'/coc/game/map/'+id,
+				type:'POST',
+				success:function(data){
+					map = JSON.parse(data).data;
+				}
+			})
+		}
+
+		function getStar(id){
+			$.ajax({
+				url:'/coc/game/star/'+id,
+				type:'POST',
+				success:function(data){
+					star = JSON.parse(data).data;
+				}
+			});
+		}
+
+		getMap(<?php echo $room['level_id']; ?>);
+		getStar(<?php echo $room['level_id']; ?>);
+
 		window.onload = function(){
-			games = new Game();
+			while(map == undefined || star == undefined){
+				setTimeout(window.onload,1000);
+			}
+
+			games = new Game(<?php echo $room['room_id']; ?>,map,star,<?php echo Auth::user()['user_id']; ?>);
 			games.run();
 
 			$('#option').hide();
@@ -75,7 +108,7 @@
 				$('#o'+id).click(function(){
 					var pos = $(this).position();
 					var lleft = pos.left;
-					var ttop = pos.top - $('#option').height();
+					var ttop = pos.top - $('#option').height() + 640;
 					$('#option').css({left:lleft,top:ttop});
 					$('#option').show();
 					var caller = $(this).attr('id');
@@ -100,12 +133,14 @@
 					arr.push($(this).children().attr("data"))
 				} else if($(this).html()=='F1') {
 					alert('Infinity Recursive Found!!');
+					// reload
 				} else if($(this).html()=='F2'){
 					$('#F2').children('td').each(function(i){
 						arr.push($(this).children().attr("data"));
 					});
 				}
 			});
+			step = arr.length;
 			play_games(arr,0);
 		});
 

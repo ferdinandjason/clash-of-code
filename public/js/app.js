@@ -1,9 +1,11 @@
 class Game{
-	constructor(){
+	constructor(id,map,star,user){
 		var canvas = document.getElementById("game");
 		canvas.width = 640;
 		canvas.height = 640;
 		this.ctx = canvas.getContext("2d");
+		this.id = id;
+		this.user = user;
 
 		var backgroundImage = new Image();
 		backgroundImage.src = "../../public/images/tileset.png";
@@ -23,32 +25,8 @@ class Game{
 			console.log("rabbit is fully loaded");
 		}
 
-		var grounds = [
-			[20, 0, 0, 0, 0, 0, 0, 0, 0,20],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 0,20],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 0,20],
-			[ 0, 0, 0, 0, 0, 0, 0, 0,20,20],
-			[ 0, 0, 0, 0, 0, 0, 0,20,20,20],
-			[ 0, 0, 0, 0, 0, 0,20,20, 0, 0],
-			[20, 0, 0, 0, 0,20,20, 0, 0, 0],
-			[20, 0, 0, 0,20,20, 0, 0, 0, 0],
-			[20,20, 0,20,20, 0, 0, 0, 0, 0],
-			[20,20,20,20, 0, 0, 0, 0, 0, 0]
-		];
-
-		var coins = [
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-			[ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-			[ 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
-			[ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-			[ 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-			[ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-			[ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
-		];
-
+		var grounds = map;
+		var coins = star;
 
 		this.map = {};
 		this.map.image = backgroundImage;
@@ -117,6 +95,7 @@ class Game{
 			that.check_star();
 			that.render();
 			that.update();
+            that.check_menang();
 			requestAnimationFrame(that.loop.bind(that));
 		},1000/that.fps);
 	}
@@ -130,6 +109,26 @@ class Game{
 
 	Pemain(){
 		return this.pemain;
+	}
+
+	check_menang(){
+		var x = this.pemain.x;
+		var y = this.pemain.y;
+		var g = this.pemain.grounds;
+		if(g[y][x] == 29){
+            $.ajax({
+                url:'/coc/game/room/clear',
+                type:'POST',
+                data:{
+                    star:this.pemain.stars,
+                    step:step,
+                    room_id:this.id,
+                    user_id:this.user,
+                }
+            });
+			alert('Kamu selesai dalam '+step+'step dan mendapatkan '+this.pemain.stars+' exp');
+			location.href = '/coc/'
+		}
 	}
 
 	check_star(){
@@ -292,4 +291,3 @@ class Player{
 		this.sprite.render();
 	}
 }
-

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
+-- version 4.5.4.1deb2ubuntu2
+-- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: May 26, 2018 at 02:57 PM
--- Server version: 10.1.21-MariaDB
--- PHP Version: 7.1.14
+-- Host: localhost
+-- Generation Time: May 27, 2018 at 12:56 AM
+-- Server version: 5.7.21-0ubuntu0.16.04.1
+-- PHP Version: 7.2.2-3+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -47,8 +47,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_room` (IN `p_level` INT, 
 BEGIN
 	SET @id = (SELECT MAX(room_id)+1 FROM room_detail ORDER BY room_id DESC LIMIT 1);
     INSERT INTO room_detail VALUES (@id,p_level,p_name,MD5(p_password),1);
-    INSERT INTO room VALUES
-(@id,p_user,NOW(),NULL,NULL);
     SELECT 1,"BERHASIL";
 END$$
 
@@ -64,7 +62,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_into_room` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_password` VARCHAR(100))  BEGIN
 	if exists(select 1 from room_detail where room_id = p_room_id and `password` = md5(p_password)) then
-		insert into room values(p_room_id, p_user_id, now(), null,0);
+		insert into room values(p_room_id, p_user_id, now(), now() ,0);
 		select 1, 'Berhasil!';
 	else
 		select 0, 'Gagal!';
@@ -77,6 +75,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login` (IN `p_email` VARCHAR(100
 	else
 		select 0, 'Email atau Password salah!','@';
 	end if;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set_exp` (IN `p_user_id` INT, IN `p_star` INT)  NO SQL
+BEGIN
+	UPDATE `user` SET user_level = level_level + p_star WHERE user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set_score` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_score` INT)  NO SQL
+BEGIN
+	UPDATE room SET score = score + p_score WHERE room_id = p_room_id AND user_id = p_user_id;
+    UPDATE room SET end_time = NOW() WHERE room_id = p_room_id AND user_id = p_user_id;
+
 END$$
 
 --
@@ -121,18 +131,26 @@ CREATE TABLE `highscore` (
 
 CREATE TABLE `level` (
   `level_id` int(11) NOT NULL,
-  `grid` text
+  `grid` text,
+  `stars` text
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `level`
 --
 
-INSERT INTO `level` (`level_id`, `grid`) VALUES
-(0, '0'),
-(1, '1'),
-(2, '0'),
-(3, '0');
+INSERT INTO `level` (`level_id`, `grid`, `stars`) VALUES
+(0, '0', '0'),
+(1, '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n1111111112\r\n1111111111\r\n', '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n1010101010\r\n0101010101'),
+(2, '0000000000\r\n0000000000\r\n0000000000\r\n0000000001\r\n0000000001\r\n0000000002\r\n0000000001\r\n0000000001\r\n0000000001\r\n1111111111\r\n', '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000001\r\n0000000000\r\n0000000001\r\n0101010101\r\n'),
+(3, '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000002\r\n1111111111', '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n1111111111\r\n'),
+(4, '2000000000\r\n1000000000\r\n1111000000\r\n0001000000\r\n0001000000\r\n0001000000\r\n0001000000\r\n1111000000\r\n1111000000\r\n1111000000', '1000000000\r\n0000000000\r\n0110000000\r\n0001000000\r\n0000000000\r\n0001000000\r\n0000000000\r\n1000000000\r\n1000000000\r\n1000000000\r\n'),
+(5, '0000000002\r\n0000000011\r\n0000000110\r\n0000001100\r\n0000011000\r\n0000110000\r\n0001100000\r\n0011000000\r\n0110000000\r\n1100000000\r\n', '0000000001\r\n0000000010\r\n0000000100\r\n0000001000\r\n0000010000\r\n0000100000\r\n0001000000\r\n0010000000\r\n0100000000\r\n1000000000\r\n'),
+(6, '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000002\r\n0000111111\r\n0000001100\r\n0000001000\r\n0000001000\r\n1111111000\r\n', '0000000000\r\n0000000000\r\n0000000000\r\n0000000000\r\n0000000001\r\n0000110000\r\n0000000000\r\n0000000000\r\n0000000000\r\n1111110000\r\n'),
+(7, '0000020000\r\n0000010000\r\n0000010000\r\n0000110000\r\n0001100000\r\n0011000000\r\n0110000000\r\n0100000000\r\n0100000000\r\n1100000000', '0000000000\r\n0000010000\r\n0000010000\r\n0000010000\r\n0000100000\r\n0001000000\r\n0010000000\r\n0100000000\r\n0100000000\r\n1100000000\r\n'),
+(8, '1100000002\r\n1100000001\r\n0000000001\r\n0000000011\r\n0000000111\r\n0000001100\r\n1000011000\r\n1000110000\r\n1101100000\r\n1111000001', '0000000001\r\n0000000001\r\n0000000001\r\n0000000011\r\n0000000101\r\n0000001000\r\n0000010000\r\n0000110000\r\n0101100000\r\n0111000000\r\n'),
+(9, '0000000000\r\n0000000000\r\n0000211000\r\n0000111000\r\n0000111111\r\n0000000001\r\n0000000001\r\n1110000111\r\n1110000111\r\n1111111111', '0000000000\r\n0000000000\r\n0000000000\r\n0000100000\r\n0000111111\r\n0000000001\r\n0000000001\r\n0000000000\r\n0000000110\r\n1111111111\r\n'),
+(10, '0000000000\r\n1111111111\r\n1000000001\r\n1000000001\r\n1000011111\r\n1001110211\r\n1111010100\r\n1111010100\r\n1100010100\r\n1100011100', '0000000000\r\n0000000001\r\n1000000001\r\n1000000000\r\n1000011100\r\n1001010200\r\n1111000000\r\n1111000000\r\n1100000000\r\n1100011000\r\n');
 
 -- --------------------------------------------------------
 
@@ -197,9 +215,24 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`room_id`, `user_id`, `start_time`, `end_time`, `score`) VALUES
-(1, 2, '2018-05-26 12:33:02', '2018-05-26 12:33:02', 0),
-(1, 3, '2018-05-26 11:25:34', '2018-05-26 11:25:34', NULL),
-(2, 2, '2018-05-26 12:13:15', '2018-05-26 12:13:15', NULL);
+(1, 2, '2018-05-26 16:49:35', '2018-05-26 16:49:35', 0),
+(1, 3, '2018-05-26 17:18:20', '2018-05-26 11:25:34', 0),
+(1, 4, '2018-05-26 17:13:26', '2018-05-26 17:13:26', 0),
+(1, 5, '2018-05-26 17:00:34', '2018-05-26 17:00:34', 0),
+(2, 2, '2018-05-26 17:18:23', '2018-05-26 12:13:15', 0),
+(2, 4, '2018-05-26 16:54:40', '2018-05-26 16:54:40', 0),
+(2, 5, '2018-05-26 17:07:49', '2018-05-26 17:07:49', 0),
+(3, 4, '2018-05-26 16:58:50', '2018-05-26 16:58:50', 0),
+(3, 5, '2018-05-26 17:09:37', '2018-05-26 17:09:37', 0),
+(4, 4, '2018-05-26 17:22:40', '2018-05-26 17:22:25', 0),
+(4, 5, '2018-05-26 17:18:26', '2018-05-26 17:15:00', 0),
+(5, 5, '2018-05-26 17:18:29', '2018-05-26 17:15:05', 0),
+(6, 4, '2018-05-26 17:31:22', '2018-05-26 17:24:01', 0),
+(6, 5, '2018-05-26 17:35:06', '2018-05-26 17:35:06', 100),
+(7, 4, '2018-05-26 17:39:00', '2018-05-26 17:39:00', 0),
+(7, 5, '2018-05-26 17:51:56', '2018-05-26 17:51:30', 0),
+(8, 4, '2018-05-26 17:51:48', '2018-05-26 17:51:48', 1),
+(9, 4, '2018-05-26 17:52:47', '2018-05-26 17:52:47', 0);
 
 -- --------------------------------------------------------
 
@@ -223,7 +256,12 @@ INSERT INTO `room_detail` (`room_id`, `level_id`, `name`, `password`, `avaiable`
 (0, 1, '', '', 0),
 (1, 2, 'ha', 'c4ca4238a0b923820dcc509a6f75849b', 1),
 (2, 3, 'hai', 'c4ca4238a0b923820dcc509a6f75849b', 1),
-(3, 2, 'hehe', 'c4ca4238a0b923820dcc509a6f75849b', 1);
+(3, 2, 'hehe', 'c4ca4238a0b923820dcc509a6f75849b', 1),
+(4, 6, 'asd', '7815696ecbf1c96e6894b779456d330e', 1),
+(6, 5, 'asdasd', 'a8f5f167f44f4964e6c998dee827110c', 1),
+(7, 7, 'coba', 'dcb76da384ae3028d6aa9b2ebcea01c9', 1),
+(8, 9, 'coba', 'c3ec0f7b054e729c5a716c8125839829', 1),
+(9, 6, 'coba2', '17146a464726f22dc5ff649fca94761e', 1);
 
 -- --------------------------------------------------------
 
@@ -283,7 +321,9 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `level_level`, `username`, `email`, `password`, `user_level`, `exp`) VALUES
 (1, 0, NULL, NULL, NULL, NULL, NULL),
 (2, 0, 'titut', 'titut@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
-(3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0);
+(3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
+(4, 0, 'ferdinandjason', 'ferdinandjasong@gmail.com', '0cbf6943aaf174232b594c1da9c8dd36', 0, 0),
+(5, 0, 'inan', 'inan@inan.com', '078ec3809f43c8a821b964acd78064d8', 10, 0);
 
 --
 -- Indexes for dumped tables
