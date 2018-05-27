@@ -28,4 +28,10 @@ class UserController extends Controller
         return back();
     }
 
+    public function logout(){
+        $_SESSION = array();
+        echo session_destroy();
+        header('Location: /coc');
+    }
+
 }
