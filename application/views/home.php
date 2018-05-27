@@ -6,7 +6,13 @@
 
     $temp = $room_control->get_all_room(Auth::user()['user_id']);
     $rooms=$temp[0];
-    $highscore = $temp[1];
+    if(count($temp)>1){
+    	$highscore = $temp[1];	
+    }
+    else{
+    	$highscore = [];
+    }
+    
     if(Auth::user()){
         $my_rooms = $room_control->get_room(Auth::user()['user_id']);
     }
@@ -50,7 +56,7 @@
 								<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
 									<div class="col-md-2" style="float: left;">
 										<div class="roomimg" style="margin-top: 5px; position: relative;">
-											<img src="public/images/room1.png" style="max-width: 100%;" alt data-content="<?php echo find($highscore,$room['level_id']) ?>" rel="popover" data-placement="bottom" data-original-title="Current Highscore" id="popover<?php echo $room['room_id'] ?>">
+											<img src="public/images/room1.png" style="max-width: 100%;" alt data-content="<?php echo find($highscore,$room['level_id']) ?>" rel="popover" data-placement="top" data-original-title="Current Highscore" id="popover<?php echo $room['room_id'] ?>">
 											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
 												<?php echo $room['name']."<br>"?>
 												Lv <?php echo $room['level_id'] ?>
