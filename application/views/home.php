@@ -89,10 +89,14 @@
 	  						<?php foreach ($my_rooms as $room) : ?>
 									<div class="col-md-2" style="float: left;">
 										<div class="roomimg" style="margin-top: 5px; position: relative;">
-											<img src="public/images/room1.png" style="max-width: 100%;" alt>
-											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
-												<?php echo $room['name']."<br>"?>
-											</div>
+											<button type="button" class="roomjoinedbutton" data-id="<?php echo $room['room_id'] ?>" data-toggle="modal" data-target="#joinedroom" style="border: 0; background: transparent;">
+												<img src="public/images/room1.png" style="max-width: 100%;" alt>
+												<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
+													<?php echo $room['name']."<br>"?>
+												</div>
+											</button>
+
+											
 										</div>						
 									</div>
 							<?php endforeach; ?>
@@ -205,6 +209,25 @@
 		    </div>
 		</div>
     </div>
+
+    <div class="modal fade" id="joinedroom" tabindex="-1" role="dialog" aria-labelledby="joinedroomlabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm" role="document">
+		    <div class="modal-content">
+		        <div class="modal-header" style="flex-direction: row;">
+		            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                <span aria-hidden="true">&times;</span>
+		            </button>
+		        </div>
+		        <div class="modal-body">
+		           	<input type="text" name="roomjoined" value="" placeholder="" id="roomjoined">
+		        </div>
+		        <div class="modal-footer">
+		            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        </div>
+		    </div>
+		</div>
+    </div>
+
 </body>
 </html>
 
@@ -214,5 +237,14 @@
 		     var roomid = $(this).data('id');
 		     $(".modal-body #roomjoin").val(roomid);
 		});
+
+		
+
+		$(document).on("click", ".roomjoinedbutton", function () {
+		     var roomid = $(this).data('id');
+		     $(".modal-body #roomjoined").val(roomid);
+		     $(".modal-body #roomjoined").attr("placeholder", roomid);
+		});
+
 	});
 </script>
