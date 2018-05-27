@@ -15,12 +15,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="../../public/css/style.css"/>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="../../public/css/app.css">
 	
 	<script type="text/javascript" src="../../public/js/app.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     
 	<title>MBD</title>
 </head>
@@ -57,7 +61,7 @@
 				</tr>
 			</tbody>
 		</table>
-	<div>
+	</div>
 	<button id="play">PLAY</button>
 	<table style="border: solid thin;position: absolute;" id="option">
 		<tbody>
@@ -70,6 +74,12 @@
 			</tr>
 		</tbody>
 	</table>
+
+
+
+	
+
+
 	<script type="text/javascript">
 		let games;
 		let map = JSON.parse('<?php echo $map; ?>').data;
@@ -136,5 +146,31 @@
 				return;
 			}
 		}
+
 	</script>
+
+	<div class="modal fade" id="ratingroom" tabindex="-1" role="dialog" aria-labelledby="ratingroomlabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    	<form id="ratingroomform" action="/coc/room/rate" method="POST">
+		            <div class="modal-header" style="flex-direction: row;">
+		                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                    <span aria-hidden="true">&times;</span>
+		                </button>
+		            </div>
+		            <div class="modal-body">
+		            	<div id="congrats">
+		            	</div>
+		            	<input type="text" placeholder="difficulty" name="difficulty">
+		            	<input type="text" placeholder="fun" name="fun">
+		            	<input type="hidden" value="" name="levelid" id="levelid">
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		                <button class="submitrating btn btn-primary" type="submit" name="submit">Rate!</button>
+		            </div>
+		        </form>
+		    </div>
+		</div>
+    </div>
 </body>

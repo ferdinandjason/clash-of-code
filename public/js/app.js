@@ -95,7 +95,11 @@ class Game{
 			that.check_star();
 			that.render();
 			that.update();
-            that.check_menang();
+            var flag = that.check_menang();
+            if(!flag){
+            	return ;
+            }
+
 			requestAnimationFrame(that.loop.bind(that));
 		},1000/that.fps);
 	}
@@ -127,9 +131,20 @@ class Game{
 					level_id:levell
                 }
             });
-			alert('Kamu selesai dalam '+step+'step dan mendapatkan '+this.pemain.stars+' exp');
-			location.href = '/coc/'
+
+            var div = document.getElementById('congrats');
+            div.innerHTML += 'Kamu selesai dalam '+step+' step dan mendapatkan '+this.pemain.stars+' exp';
+            $('#ratingroom').modal('show');
+            $('#levelid').val(levell);
+            // $('#levelid').attr('placeholder', levell);
+
+			// alert('Kamu selesai dalam '+step+' step dan mendapatkan '+this.pemain.stars+' exp');
+
+
+			// location.href = '/coc/'
+			return false;
 		}
+		return true;
 	}
 
 	check_star(){

@@ -45,4 +45,8 @@ Router::route('/room/rank/(.+)',function($id){
     echo Router::handle('RoomController@get_rank',array($id));
 });
 
+Router::route('/room/rate',function(){
+    Router::handle('RoomController@rate');
+});
+
 Router::execute(substr($_SERVER['REQUEST_URI'],4));

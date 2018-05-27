@@ -57,4 +57,9 @@ class Room extends Model
         return json_encode(array('data'=>$rank));
     }
 
+    public function update_rating($levelid, $type1, $type2, $user_id){
+        $query = "CALL sp_add_rating(1,$levelid,$user_id,$type1); CALL sp_add_rating(2,$levelid,$user_id,$type2);";
+        MySQL::MultiQuery($query,true);
+    }
+        // $query = "INSERT INTO `rating` VALUES (2,1,$levelid,$user_id,$type1);";
 }
