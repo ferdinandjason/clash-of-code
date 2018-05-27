@@ -44,6 +44,7 @@ class RoomController extends Controller
 
     public function rate(){
         $this->model->update_rating($_POST['levelid'], $_POST['difficulty'], $_POST['fun'], $_SESSION['user_id']);
+        header('Location: ../');
         // header('')
     }
 }
