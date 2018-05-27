@@ -45,6 +45,11 @@
 	</div>
 
 	<div <?php if(!Auth::user()): ?> hidden <?php endif; ?> class="container rooms">
+
+		<form>
+			<input type="button" value="Logout" style="position: fixed; right: 50px; top: 50%;" onclick="window.location.href='/coc/logout'" />
+		</form>
+		
 		<div class="row">
 			<div class="col-12 availableroom">
 				<div class="card wallet" style="top: 50px;">
@@ -282,7 +287,6 @@
                  }
              });
 		});
-
 	});
 </script>
 

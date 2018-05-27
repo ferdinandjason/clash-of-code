@@ -49,4 +49,8 @@ Router::route('/room/rate',function(){
     Router::handle('RoomController@rate');
 });
 
+Router::route('/logout',function(){
+    Router::handle('UserController@logout');
+});
+
 Router::execute(substr($_SERVER['REQUEST_URI'],4));
