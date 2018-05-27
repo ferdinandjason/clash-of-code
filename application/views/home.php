@@ -56,7 +56,7 @@
 								<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
 									<div class="col-md-2" style="float: left;">
 										<div class="roomimg" style="margin-top: 5px; position: relative;">
-											<img src="public/images/room1.png" style="max-width: 100%;" alt data-content="<?php echo find($highscore,$room['level_id']) ?>" rel="popover" data-placement="top" data-original-title="Current Highscore" id="popover<?php echo $room['room_id'] ?>">
+											<img src="public/images/room1.png" style="max-width: 100%;" alt data-content="<?php echo find($highscore,$room['level_id'])."<br>"."Rating Diff = ".$room['diff']."<br>"."Rating Fun = ".$room['fun'] ?>" rel="popover" data-placement="top" data-original-title="Highscore and Rating" id="popover<?php echo $room['room_id'] ?>">
 											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
 												<?php echo $room['name']."<br>"?>
 												Lv <?php echo $room['level_id'] ?>
@@ -65,7 +65,6 @@
 											<button type="button" class="joinroombutton" data-id="<?php echo $room['room_id'] ?>" data-toggle="modal" data-target="#joinroom" style="border: 0; background: transparent;">
 												<img src="public/images/room2.png" style="max-width: 100%; margin-top: -2px;" alt="join room">
 											</button>
-											
 										</div>						
 									</div>
 								<?php endif; ?>
@@ -250,7 +249,7 @@
             $('#popover<?php echo $room['room_id'] ?>').click(function () {
                 $('.popover').hide();
             });
-            $('#popover<?php echo $room['room_id'] ?>').popover();
+            $('#popover<?php echo $room['room_id'] ?>').popover({html:true});
         <?php endforeach; ?>
 
 		

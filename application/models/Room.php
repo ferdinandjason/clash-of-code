@@ -27,9 +27,9 @@ class Room extends Model
     }
 
     public function get_all_room($user_id){
-        $query = "SELECT * FROM room_detail WHERE avaiable = 1;";
-        $query.= "CALL sp_get_highscore($user_id)";
-        return MySQL::MultiQuery($query,true);
+        $query = "CALL sp_get_all_room();";
+        $query.= "CALL sp_get_highscore($user_id);";
+        return MySQL::MultiQuery($query);
     }
 
     public function get_room($user){
