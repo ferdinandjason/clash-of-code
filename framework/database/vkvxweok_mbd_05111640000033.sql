@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: May 27, 2018 at 12:56 AM
--- Server version: 5.7.21-0ubuntu0.16.04.1
--- PHP Version: 7.2.2-3+ubuntu16.04.1+deb.sury.org+1
+-- Host: 127.0.0.1
+-- Generation Time: May 27, 2018 at 07:56 AM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 7.1.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -82,11 +82,18 @@ BEGIN
 	UPDATE `user` SET user_level = level_level + p_star WHERE user_id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set_score` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_score` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_set_score` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_score` INT, IN `p_level_id` INT)  NO SQL
 BEGIN
-	UPDATE room SET score = score + p_score WHERE room_id = p_room_id AND user_id = p_user_id;
+	UPDATE room SET score = p_score WHERE room_id = p_room_id AND user_id = p_user_id;
+    SET @score = (SELECT score FROM room WHERE room_id = p_room_id AND user_id = p_user_id);
     UPDATE room SET end_time = NOW() WHERE room_id = p_room_id AND user_id = p_user_id;
-
+    IF EXISTS (SELECT 1 FROM highscore WHERE level_id = p_level_id AND user_id = p_user_id) THEN
+    	IF EXISTS (SELECT @score>score FROM highscore WHERE level_id = p_level_id AND user_id = p_user_id) THEN
+    		UPDATE highscore SET score = @score WHERE level_id = p_level_id AND user_id = p_user_id;
+        END IF;
+    ELSE 
+    	INSERT INTO highscore(level_id,user_id,score) VALUES(p_level_id,p_user_id,p_score);
+    END IF;
 END$$
 
 --
@@ -117,11 +124,17 @@ DELIMITER ;
 
 CREATE TABLE `highscore` (
   `highscore_id` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
   `level_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `score` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `highscore`
+--
+
+INSERT INTO `highscore` (`highscore_id`, `level_id`, `user_id`, `score`) VALUES
+(1, 5, 4, 300);
 
 -- --------------------------------------------------------
 
@@ -191,7 +204,6 @@ CREATE TABLE `rating` (
   `rating_id` int(11) NOT NULL,
   `type_rating_id` int(11) NOT NULL,
   `level_id` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -220,19 +232,18 @@ INSERT INTO `room` (`room_id`, `user_id`, `start_time`, `end_time`, `score`) VAL
 (1, 4, '2018-05-26 17:13:26', '2018-05-26 17:13:26', 0),
 (1, 5, '2018-05-26 17:00:34', '2018-05-26 17:00:34', 0),
 (2, 2, '2018-05-26 17:18:23', '2018-05-26 12:13:15', 0),
-(2, 4, '2018-05-26 16:54:40', '2018-05-26 16:54:40', 0),
-(2, 5, '2018-05-26 17:07:49', '2018-05-26 17:07:49', 0),
+(2, 3, '2018-05-26 18:04:33', '2018-05-26 18:04:33', 0),
+(3, 3, '2018-05-26 18:06:17', '2018-05-26 18:06:17', 0),
 (3, 4, '2018-05-26 16:58:50', '2018-05-26 16:58:50', 0),
-(3, 5, '2018-05-26 17:09:37', '2018-05-26 17:09:37', 0),
-(4, 4, '2018-05-26 17:22:40', '2018-05-26 17:22:25', 0),
-(4, 5, '2018-05-26 17:18:26', '2018-05-26 17:15:00', 0),
-(5, 5, '2018-05-26 17:18:29', '2018-05-26 17:15:05', 0),
-(6, 4, '2018-05-26 17:31:22', '2018-05-26 17:24:01', 0),
+(6, 4, '2018-05-27 05:55:02', '2018-05-27 05:55:02', 300),
 (6, 5, '2018-05-26 17:35:06', '2018-05-26 17:35:06', 100),
-(7, 4, '2018-05-26 17:39:00', '2018-05-26 17:39:00', 0),
-(7, 5, '2018-05-26 17:51:56', '2018-05-26 17:51:30', 0),
-(8, 4, '2018-05-26 17:51:48', '2018-05-26 17:51:48', 1),
-(9, 4, '2018-05-26 17:52:47', '2018-05-26 17:52:47', 0);
+(10, 3, '2018-05-27 04:03:20', '2018-05-27 04:03:20', 0),
+(11, 3, '2018-05-27 04:28:24', '2018-05-27 04:28:24', 0),
+(12, 3, '2018-05-27 05:08:17', '2018-05-27 05:08:17', 7),
+(13, 3, '2018-05-27 05:22:58', '2018-05-27 05:22:58', 0),
+(14, 3, '2018-05-26 18:30:27', '2018-05-26 18:30:27', 0),
+(15, 3, '2018-05-26 18:31:05', '2018-05-26 18:31:05', 0),
+(16, 3, '2018-05-26 18:41:59', '2018-05-26 18:41:59', 0);
 
 -- --------------------------------------------------------
 
@@ -261,7 +272,15 @@ INSERT INTO `room_detail` (`room_id`, `level_id`, `name`, `password`, `avaiable`
 (6, 5, 'asdasd', 'a8f5f167f44f4964e6c998dee827110c', 1),
 (7, 7, 'coba', 'dcb76da384ae3028d6aa9b2ebcea01c9', 1),
 (8, 9, 'coba', 'c3ec0f7b054e729c5a716c8125839829', 1),
-(9, 6, 'coba2', '17146a464726f22dc5ff649fca94761e', 1);
+(9, 6, 'coba2', '17146a464726f22dc5ff649fca94761e', 1),
+(10, 7, 't', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(11, 6, 'hai', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(12, 6, 'we', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(13, 1, 'eqee', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(14, 9, 'eq', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(15, 5, 'hehe', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(16, 9, 'dd', 'd41d8cd98f00b204e9800998ecf8427e', 1),
+(17, 6, 'agagag', 'd41d8cd98f00b204e9800998ecf8427e', 1);
 
 -- --------------------------------------------------------
 
@@ -273,18 +292,6 @@ CREATE TABLE `rule` (
   `rule_id` int(11) NOT NULL,
   `rule_title` varchar(50) DEFAULT NULL,
   `rule_desc` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `type`
---
-
-CREATE TABLE `type` (
-  `type_id` int(11) NOT NULL,
-  `type_title` varchar(50) DEFAULT NULL,
-  `type_description` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -321,7 +328,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `level_level`, `username`, `email`, `password`, `user_level`, `exp`) VALUES
 (1, 0, NULL, NULL, NULL, NULL, NULL),
 (2, 0, 'titut', 'titut@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
-(3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
+(3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 9, 0),
 (4, 0, 'ferdinandjason', 'ferdinandjasong@gmail.com', '0cbf6943aaf174232b594c1da9c8dd36', 0, 0),
 (5, 0, 'inan', 'inan@inan.com', '078ec3809f43c8a821b964acd78064d8', 10, 0);
 
@@ -334,7 +341,6 @@ INSERT INTO `user` (`user_id`, `level_level`, `username`, `email`, `password`, `
 --
 ALTER TABLE `highscore`
   ADD PRIMARY KEY (`highscore_id`),
-  ADD KEY `FK_highscore_type` (`type_id`),
   ADD KEY `FK_level_highscore` (`level_id`),
   ADD KEY `FK_user_highscore` (`user_id`);
 
@@ -363,7 +369,6 @@ ALTER TABLE `level_rule_desc`
 ALTER TABLE `rating`
   ADD PRIMARY KEY (`rating_id`),
   ADD KEY `FK_rating_level` (`level_id`),
-  ADD KEY `FK_rating_type` (`type_id`),
   ADD KEY `FK_type_rating_detail` (`type_rating_id`),
   ADD KEY `FK_user_rating` (`user_id`);
 
@@ -388,12 +393,6 @@ ALTER TABLE `rule`
   ADD PRIMARY KEY (`rule_id`);
 
 --
--- Indexes for table `type`
---
-ALTER TABLE `type`
-  ADD PRIMARY KEY (`type_id`);
-
---
 -- Indexes for table `type_rating`
 --
 ALTER TABLE `type_rating`
@@ -407,6 +406,15 @@ ALTER TABLE `user`
   ADD KEY `FK_lvl` (`level_level`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `highscore`
+--
+ALTER TABLE `highscore`
+  MODIFY `highscore_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- Constraints for dumped tables
 --
 
@@ -414,7 +422,6 @@ ALTER TABLE `user`
 -- Constraints for table `highscore`
 --
 ALTER TABLE `highscore`
-  ADD CONSTRAINT `FK_highscore_type` FOREIGN KEY (`type_id`) REFERENCES `type` (`type_id`),
   ADD CONSTRAINT `FK_level_highscore` FOREIGN KEY (`level_id`) REFERENCES `level` (`level_id`),
   ADD CONSTRAINT `FK_user_highscore` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
@@ -430,16 +437,8 @@ ALTER TABLE `level_rule_desc`
 --
 ALTER TABLE `rating`
   ADD CONSTRAINT `FK_rating_level` FOREIGN KEY (`level_id`) REFERENCES `level` (`level_id`),
-  ADD CONSTRAINT `FK_rating_type` FOREIGN KEY (`type_id`) REFERENCES `type` (`type_id`),
   ADD CONSTRAINT `FK_type_rating_detail` FOREIGN KEY (`type_rating_id`) REFERENCES `type_rating` (`type_rating_id`),
   ADD CONSTRAINT `FK_user_rating` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
-
---
--- Constraints for table `room`
---
-ALTER TABLE `room`
-  ADD CONSTRAINT `FK_room_detail` FOREIGN KEY (`room_id`) REFERENCES `room_detail` (`room_id`),
-  ADD CONSTRAINT `FK_room_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
 -- Constraints for table `room_detail`
