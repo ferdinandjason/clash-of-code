@@ -66,11 +66,11 @@
 	<table style="border: solid thin;position: absolute;" id="option">
 		<tbody>
 			<tr>
-				<td class="click box show"><i class="fas fa-chevron-up" data="lurus"></i></td>
-				<td class="click box show"><i class="fas fa-chevron-right" data="kanan"></i></td>
-				<td class="click box show"><i class="fas fa-chevron-left" data="kiri"></i></td>
-				<td class="click box show">F1</td>
-				<td class="click box show">F2</td>
+				<td class="click box show" style="background-color: #fff;"><i class="fas fa-chevron-up" data="lurus"></i></td>
+				<td class="click box show" style="background-color: #fff;"><i class="fas fa-chevron-right" data="kanan"></i></td>
+				<td class="click box show" style="background-color: #fff;"><i class="fas fa-chevron-left" data="kiri"></i></td>
+				<td class="click box show" style="background-color: #fff;">F1</td>
+				<td class="click box show" style="background-color: #fff;">F2</td>
 			</tr>
 		</tbody>
 	</table>

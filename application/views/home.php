@@ -47,8 +47,14 @@
 	<div <?php if(!Auth::user()): ?> hidden <?php endif; ?> class="container rooms">
 
 		<form>
-			<input type="button" value="Logout" style="position: fixed; right: 50px; top: 50%;" onclick="window.location.href='/coc/logout'" />
+			<button type="button" class="btn btn-sm btn-light" style="position: fixed; right: 50px; top: 50%;" onclick="window.location.href='/coc/logout'">
+				Log Out
+			</button>
 		</form>
+
+		<button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#tutorial" style="position: fixed; right: 50px; top: 30%;" >
+			Tutorial
+		</button>
 		
 		<div class="row">
 			<div class="col-12 availableroom">
@@ -236,6 +242,18 @@
 		        </div>
 		        <div class="modal-footer">
 		            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        </div>
+		    </div>
+		</div>
+    </div>
+
+    <div class="modal fade" id="tutorial" tabindex="-1" role="dialog" aria-labelledby="joinedroomlabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content" style="height: 500px; background-image: url(public/images/tutorial.png);">
+		        <div class="modal-header" style="flex-direction: row;">
+		            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                <span aria-hidden="true">&times;</span>
+		            </button>
 		        </div>
 		    </div>
 		</div>
