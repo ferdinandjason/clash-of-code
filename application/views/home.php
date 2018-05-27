@@ -52,7 +52,7 @@
 				<div class="card wallet" style="top: 50px;">
      				<div class="overlay"></div>
   					<div class="circle"></div>
-  					<div class="col">
+  					<div class="col" style="overflow-y: auto;">
   						<?php if(Auth::user()): ?> 
 	  						<?php foreach ($rooms as $room) : ?>
 								<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
@@ -79,7 +79,7 @@
  				
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" style="overflow-y: auto;">
 			<div class="col-8 joinedroom" style="margin-top: 70px;">
 				<a href="#" class="card wallet">
      				<div class="overlay"></div>

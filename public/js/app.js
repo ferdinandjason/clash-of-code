@@ -20,7 +20,7 @@ class Game{
 		};
 
 		var player = new Image();
-		player.src = "../../public/images/rabbit.gif";
+		player.src = "../../public/images/idle_1.png";
 		player.onload = function(){
 			console.log("rabbit is fully loaded");
 		}
@@ -50,11 +50,11 @@ class Game{
 		this.player = {};
 		this.player.image = player;
 		this.player.canvas = this.ctx;
-		this.player.width = 108;
+		this.player.width = 150;
 		this.player.height = 210;
 		this.player.indexFrame = 1;
 		this.player.maxFrame = 1;
-		this.player.loop = true;
+		this.player.loop = false;
 		this.player.scaleFactor = 0.4;
 
 
@@ -115,7 +115,7 @@ class Game{
 		var x = this.pemain.x;
 		var y = this.pemain.y;
 		var g = this.pemain.grounds;
-		if(g[y][x] == 29){
+		if(g[y][x] == 1){
             $.ajax({
                 url:'/coc/game/room/clear',
                 type:'POST',
@@ -184,14 +184,14 @@ class Map{
 }
 
 class Sprite{
-	constructor(options,x,y,tileSize){
+	constructor(options,x,y,tileSize,p_index=0){
 		this.canvas = options.canvas;
 		this.width = options.width;
 		this.height = options.height;
 		this.image = options.image;
 
-		this.frameIndex = 0;
-		this.index =  0,
+		this.frameIndex = p_index;
+		this.index =  p_index;
 		this.indexFrame = options.indexFrame || 0; 
 		this.maxFrame = options.maxFrame || 1;
 
@@ -240,7 +240,7 @@ class Sprite{
 
 class Player{
 	constructor(options,initial_x,initial_y,grounds,tileSize){
-		this.sprite = new Sprite(options,initial_x,initial_y,tileSize);
+		this.sprite = new Sprite(options,initial_x,initial_y,tileSize,1);
 		this.position = 0;
 		this.x = 0;
 		this.y = 9;
@@ -250,6 +250,7 @@ class Player{
 
 	handle(direction){
 		if(direction === "lurus"){
+			console.log(this.position);
 			if(this.position == 0){this.update_pos(1,0);}  // ke kanan
 			if(this.position == 1){this.update_pos(0,-1);}  // ke atas
 			if(this.position == 2){this.update_pos(-1,0);} // ke kiri
@@ -257,24 +258,47 @@ class Player{
 		}
 		if(direction === "kiri"){
 			this.position += 1;
+			this.sprite.frameIndex -=1;
+			this.sprite.index -=1;
 			if(this.position < 0){
 				this.position += 4;
 			}
+			if(this.sprite.frameIndex<0){
+				this.sprite.frameIndex +=4;
+			}
+			if(this.sprite.index<0){
+				this.sprite.index +=4;
+			}
+			this.sprite.index %=4;
+			this.sprite.frameIndex %= 4;
 			this.position %= 4;
 		}
 		if(direction === "kanan"){
 			this.position -= 1;
+			this.sprite.frameIndex +=1;
+			this.sprite.index +=1;
 			if(this.position < 0){
 				this.position += 4;
 			}
+			if(this.sprite.frameIndex<0){
+				this.sprite.frameIndex +=4;
+			}
+			if(this.sprite.index<0){
+				this.sprite.index +=4;
+			}
+			this.sprite.index %=4;
+			this.sprite.frameIndex %= 4;
 			this.position %= 4;
 		}
 	}
 
 	update_pos(dx,dy){
 		if((this.x + dx < 10) && (this.y + dy < 10)){
-			console.log(this.x + dx < 10 && this.y + dy < 10);
-			if(this.grounds[this.y+dy][this.x+dx] != 0){
+			if(this.grounds[this.y+dy][this.x+dx] == 0 || this.grounds[this.y+dy][this.x+dx] == 1){
+				// this.sprite.frameIndex += 1;
+				// this.sprite.index += 1;
+				// this.sprite.frameIndex %= 4;
+				// this.sprite.index %= 4;
 				this.sprite.update_pos(dx,dy);
 				this.x+=dx;
 				this.y+=dy;
