@@ -16,11 +16,11 @@ class GameController extends Controller{
 			$row = str_split($data[$i]);
 			foreach($row as $r){
 				if($r == '1'){
-					array_push($temp, rand(10,13)*2);
-				} else if($r == '2'){
-					array_push($temp, 29);
-				} else {
 					array_push($temp, 0);
+				} else if($r == '2'){
+					array_push($temp, 1);
+				} else {
+					array_push($temp, rand(2,5));
 				}
 			}
 			array_push($maps, $temp);

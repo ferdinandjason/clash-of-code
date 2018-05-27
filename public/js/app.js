@@ -8,7 +8,7 @@ class Game{
 		this.user = user;
 
 		var backgroundImage = new Image();
-		backgroundImage.src = "../../public/images/tileset.png";
+		backgroundImage.src = "../../public/images/tile.png";
 		backgroundImage.onload = function(){
 			console.log("image is fully loaded");
 		};
@@ -34,7 +34,7 @@ class Game{
 		this.map.tileSize = 64;
 		this.map.rowCount = 10;
 		this.map.colCount = 10;
-		this.map.imageNum = 10;
+		this.map.imageNum = 3;
 		this.map.ground = grounds;
 
 		this.sprite_coin = {};
