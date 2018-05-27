@@ -53,7 +53,8 @@ class GameController extends Controller{
 	    $step = $_POST['step'];
 	    $room_id = $_POST['room_id'];
 	    $user_id = $_POST['user_id'];
-        echo $this->model->set_score($room_id,$user_id,$step);
+	    $level_id = $_POST['level_id'];
+        echo $this->model->set_score($room_id,$user_id,$step,$level_id);
         echo $this->model->set_exp($user_id,$star);
     }
 

@@ -75,6 +75,7 @@
 		let map = JSON.parse('<?php echo $map; ?>').data;
 		let star = JSON.parse('<?php echo $star; ?>').data;
 		let step = 0;
+		let levell = <?php echo $room['level_id']; ?>
 
 		window.onload = function(){
 			if(map == undefined || star == undefined){

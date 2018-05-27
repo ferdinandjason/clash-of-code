@@ -41,4 +41,8 @@ Router::route('/game/room/clear',function(){
    Router::handle('GameController@push');
 });
 
+Router::route('/room/rank/(.+)',function($id){
+    Router::handle('RoomController@');
+});
+
 Router::execute(substr($_SERVER['REQUEST_URI'],4));

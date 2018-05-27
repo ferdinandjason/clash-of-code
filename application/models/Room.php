@@ -45,4 +45,15 @@ class Room extends Model
         $query = "SELECT * from room_detail WHERE room_id = $id";
         return MySQL::Query($query,true)[0];
     }
+
+    public function get_rank($id){
+        $query = "CALL sp_get_rank($id)";
+        $temp = MySQL::Query($query,true);
+        $rank = [];
+        for($i = 0;$i < count($temp); $i+=1){
+            array_push($rank,[$i+1,$temp[$i]['name'],$temp[$i]['score']]);
+        }
+        return json_encode(array('data'=>$rank));
+
+    }
 }

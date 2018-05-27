@@ -124,6 +124,7 @@ class Game{
                     step:step,
                     room_id:this.id,
                     user_id:this.user,
+					level_id:levell
                 }
             });
 			alert('Kamu selesai dalam '+step+'step dan mendapatkan '+this.pemain.stars+' exp');

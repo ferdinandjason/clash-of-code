@@ -6,8 +6,8 @@ class Game extends Model{
 		return MySQL::Query($query,true);
 	}
 
-	public function set_score($room_id,$user_id,$score){
-	    $query = "CALL sp_set_score($room_id,$user_id,$score)";
+	public function set_score($room_id,$user_id,$score,$level_id){
+	    $query = "CALL sp_set_score($room_id,$user_id,$score,$level_id)";
 	    return MySQL::Query($query,false);
     }
 
