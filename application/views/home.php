@@ -1,33 +1,25 @@
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-	crossorigin="anonymous"></script>
-
 <?php
     $var = $this->data;
     foreach ($var as $name => $value) {
         ${$name}=$value;
     }
 
-    $rooms = $room_control->get_all_room();
+    $temp = $room_control->get_all_room(Auth::user()['user_id']);
+    $rooms=$temp[0];
+    $highscore = $temp[1];
     if(Auth::user()){
         $my_rooms = $room_control->get_room(Auth::user()['user_id']);
     }
     else{
-        $my_rooms = [];
+        $my_rooms = [];;
     }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<?php include('head.php'); ?>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="public/css/style.css"/>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
 	<title>MBD</title>
 </head>
 <body>
@@ -58,7 +50,7 @@
 								<?php if(!Room::is_joined_room(Auth::user()['user_id'],$room['room_id'])): ?>
 									<div class="col-md-2" style="float: left;">
 										<div class="roomimg" style="margin-top: 5px; position: relative;">
-											<img src="public/images/room1.png" style="max-width: 100%;" alt>
+											<img src="public/images/room1.png" style="max-width: 100%;" alt data-content="<?php echo find($highscore,$room['level_id']) ?>" rel="popover" data-placement="bottom" data-original-title="Current Highscore" id="popover<?php echo $room['room_id'] ?>">
 											<div class="roomname" style="position: absolute; top: 10%; left: 10%; font-family: Lato; color: #fff">
 												<?php echo $room['name']."<br>"?>
 												Lv <?php echo $room['level_id'] ?>
@@ -113,7 +105,6 @@
         </button>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
@@ -219,7 +210,19 @@
 		            </button>
 		        </div>
 		        <div class="modal-body">
-		           	<input type="text" name="roomjoined" value="" placeholder="" id="roomjoined">
+		           	<table class="table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="isirank">
+
+                        </tbody>
+                    </table>
+                    <p id="statusrank"></p>
 		        </div>
 		        <div class="modal-footer">
 		            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -228,8 +231,7 @@
 		</div>
     </div>
 
-</body>
-</html>
+
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -238,13 +240,46 @@
 		     $(".modal-body #roomjoin").val(roomid);
 		});
 
+        <?php foreach ($rooms as $room) : ?>
+            $('#popover<?php echo $room['room_id'] ?>').click(function () {
+                $('.popover').hide();
+            });
+            $('#popover<?php echo $room['room_id'] ?>').popover();
+        <?php endforeach; ?>
+
 		
 
-		$(document).on("click", ".roomjoinedbutton", function () {
+		$('.roomjoinedbutton').click(function () {
 		     var roomid = $(this).data('id');
-		     $(".modal-body #roomjoined").val(roomid);
-		     $(".modal-body #roomjoined").attr("placeholder", roomid);
+		     var url = '/coc/room/rank/'+roomid;
+             $.ajax({
+                 url:url,
+                 type:'POST',
+                 success:function(data){
+                    var rank = JSON.parse(data).data;
+                    var string =''
+                    for(var i = 0;i<rank.length;i+=1){
+                        string+='<tr>';
+                        string+='<td>'+rank[i][0]+'</td>';
+                        string+='<td>'+rank[i][1]+'</td>';
+                        string+='<td>'+rank[i][2]+'</td>';
+                        string+='</tr>';
+                    }
+                    if(rank.length == 0){
+                        $('#isirank').html('');
+                        $('#statusrank').html('No rank avaiable');
+                    }
+                    else{
+                        $('#isirank').html(string);
+                        $('#statusrank').html('');
+                    }
+
+                 }
+             });
 		});
 
 	});
 </script>
+
+</body>
+</html>

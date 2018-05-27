@@ -26,9 +26,10 @@ class Room extends Model
         return MySQL::Query($query,true)[0][0];
     }
 
-    public function get_all_room(){
+    public function get_all_room($user_id){
         $query = "SELECT * FROM room_detail WHERE avaiable = 1;";
-        return MySQL::Query($query,true);
+        $query.= "CALL sp_get_highscore($user_id)";
+        return MySQL::MultiQuery($query,true);
     }
 
     public function get_room($user){
@@ -54,6 +55,6 @@ class Room extends Model
             array_push($rank,[$i+1,$temp[$i]['name'],$temp[$i]['score']]);
         }
         return json_encode(array('data'=>$rank));
-
     }
+
 }

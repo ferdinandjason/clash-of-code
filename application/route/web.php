@@ -42,7 +42,7 @@ Router::route('/game/room/clear',function(){
 });
 
 Router::route('/room/rank/(.+)',function($id){
-    Router::handle('RoomController@');
+    echo Router::handle('RoomController@get_rank',array($id));
 });
 
 Router::execute(substr($_SERVER['REQUEST_URI'],4));

@@ -38,4 +38,12 @@ class RoomController extends Controller
         return View::make('game',compact('room'));
     }
 
+    public function get_rank($id){
+        return $this->model->get_rank($id);
+    }
+
+    public function get_highscore($id){
+        return $this->model->get_highscore($id);
+    }
+
 }
