@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2018 at 07:56 AM
+-- Generation Time: May 27, 2018 at 11:26 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.14
 
@@ -24,10 +24,9 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_rating` (`p_type_rating_id` INTEGER, `p_level_id` INTEGER, `p_type_id` INTEGER, `p_user_id` INTEGER, `p_rating` INTEGER)  BEGIN
-	set @id = (select max(`rating_id`) from `rating` group by rating_id) +1;
-	insert into rating values(@id, p_type_rating_id, p_level_id, p_type_id, p_user_id, p_rating);
-	select 1, 'Berhasil!';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_rating` (IN `p_type_rating_id` INT, IN `p_level_id` INT, IN `p_user_id` INT, IN `p_rating` INT)  NO SQL
+BEGIN 
+    INSERT INTO rating(type_rating_id,level_id,user_id,rating) VALUES(p_type_rating_id, p_level_id, p_user_id, p_rating); SELECT 1, 'Berhasil!'; 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_change_password` (`p_username` VARCHAR(100), `p_old_pass` VARCHAR(25), `p_new_pass` VARCHAR(25))  BEGIN
@@ -58,6 +57,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_daftar` (IN `p_username` VARCHAR
 	else
 		select 0, 'Pendaftaran Gagal, Email atau Username sudah dipakai!';
 	end if;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_highscore` (IN `p_user_id` INT)  NO SQL
+BEGIN
+	SELECT * FROM highscore WHERE user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_rank` (IN `p_room_id` INT)  NO SQL
+BEGIN
+	SELECT room.room_id as room_id , user.username as name, room.score as score FROM room INNER JOIN `user` ON `user`.`user_id` = room.user_id
+WHERE room.score != 0 and room.room_id = p_room_id
+ORDER BY room.score ASC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_into_room` (IN `p_room_id` INT, IN `p_user_id` INT, IN `p_password` VARCHAR(100))  BEGIN
@@ -134,7 +145,9 @@ CREATE TABLE `highscore` (
 --
 
 INSERT INTO `highscore` (`highscore_id`, `level_id`, `user_id`, `score`) VALUES
-(1, 5, 4, 300);
+(1, 5, 4, 300),
+(2, 9, 2, 34),
+(3, 7, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -208,6 +221,28 @@ CREATE TABLE `rating` (
   `rating` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `rating`
+--
+
+INSERT INTO `rating` (`rating_id`, `type_rating_id`, `level_id`, `user_id`, `rating`) VALUES
+(1, 1, 9, 2, 5),
+(2, 2, 9, 2, 3),
+(3, 1, 9, 2, 5),
+(4, 2, 9, 2, 3),
+(5, 1, 9, 2, 5),
+(6, 2, 9, 2, 3),
+(7, 1, 9, 2, 5),
+(8, 2, 9, 2, 3),
+(9, 1, 9, 2, 5),
+(10, 2, 9, 2, 3),
+(11, 1, 9, 2, 5),
+(12, 2, 9, 2, 3),
+(13, 1, 7, 2, 4),
+(14, 2, 7, 2, 3),
+(15, 1, 7, 2, 3),
+(16, 2, 7, 2, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -237,6 +272,8 @@ INSERT INTO `room` (`room_id`, `user_id`, `start_time`, `end_time`, `score`) VAL
 (3, 4, '2018-05-26 16:58:50', '2018-05-26 16:58:50', 0),
 (6, 4, '2018-05-27 05:55:02', '2018-05-27 05:55:02', 300),
 (6, 5, '2018-05-26 17:35:06', '2018-05-26 17:35:06', 100),
+(8, 2, '2018-05-27 09:07:41', '2018-05-27 09:07:41', 34),
+(10, 2, '2018-05-27 09:22:58', '2018-05-27 09:22:58', 3),
 (10, 3, '2018-05-27 04:03:20', '2018-05-27 04:03:20', 0),
 (11, 3, '2018-05-27 04:28:24', '2018-05-27 04:28:24', 0),
 (12, 3, '2018-05-27 05:08:17', '2018-05-27 05:08:17', 7),
@@ -305,6 +342,14 @@ CREATE TABLE `type_rating` (
   `type_rating_title` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `type_rating`
+--
+
+INSERT INTO `type_rating` (`type_rating_id`, `type_rating_title`) VALUES
+(1, 'Difficulty'),
+(2, 'Fun');
+
 -- --------------------------------------------------------
 
 --
@@ -327,7 +372,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `level_level`, `username`, `email`, `password`, `user_level`, `exp`) VALUES
 (1, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 0, 'titut', 'titut@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 0, 0),
+(2, 0, 'titut', 'titut@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 10, 0),
 (3, 0, 'yolandahp', 'yolandahertita903@gmail.com', '158c9c96f4768dfe0bbedfc420938df1', 9, 0),
 (4, 0, 'ferdinandjason', 'ferdinandjasong@gmail.com', '0cbf6943aaf174232b594c1da9c8dd36', 0, 0),
 (5, 0, 'inan', 'inan@inan.com', '078ec3809f43c8a821b964acd78064d8', 10, 0);
@@ -413,7 +458,12 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `highscore`
 --
 ALTER TABLE `highscore`
-  MODIFY `highscore_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `highscore_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `rating`
+--
+ALTER TABLE `rating`
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- Constraints for dumped tables
 --
